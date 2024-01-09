@@ -9,6 +9,7 @@
   "dependencies": {
     "@nrd/fua.core.assert": "^1.0.1",
     "@nrd/fua.core.is": "^1.0.4",
+    "@nrd/fua.core.strings": "^1.0.1",
     "node-fetch": "2.x"
   },
   "overrides": {
