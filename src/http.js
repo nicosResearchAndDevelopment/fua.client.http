@@ -6,13 +6,30 @@ const
 
 class HTTPClient {
 
+    #baseUrl = 'http://localhost';
     #options = {};
-    #agent   = null;
-    #fetch   = fetch || nodeFetch;
+
+    #fetch    = fetch || nodeFetch;
+    #Headers  = Headers || nodeFetch.Headers;
+    #Request  = Request || nodeFetch.Request;
+    #Response = Response || nodeFetch.Response;
 
     constructor(options = {}) {
         assert.object(options, types.ClientOptions);
         assert.todo(/* TODO */);
+    }
+
+    async get(url, headers) {
+        const
+            request  = new this.#Request(
+                new URL(url, this.#baseUrl), {
+                    ...this.#options,
+                    headers: headers ? new this.#Headers(headers) : undefined
+                }
+            ),
+            response = await this.#fetch(request);
+
+        // TODO
     }
 
     // TODO
