@@ -4,6 +4,11 @@
 
 ### Node HTTP/HTTPS
 
+[`net`](https://nodejs.org/docs/latest-v18.x/api/net.html)
+[`http`](https://nodejs.org/docs/latest-v18.x/api/http.html)
+[`tls`](https://nodejs.org/docs/latest-v18.x/api/tls.html)
+[`https`](https://nodejs.org/docs/latest-v18.x/api/https.html)
+
 ```ts
 import {Socket} from 'node:net'
 import {ClientRequest, Agent} from 'node:http'
@@ -180,6 +185,11 @@ type ECCertificateObject = CertificateObject & {
 
 ### Fetch API
 
+[`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
+[`Headers`](https://developer.mozilla.org/en-US/docs/Web/API/Headers)
+[`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+[`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+
 ```ts
 import {Agent} from 'node:http'
 
@@ -215,7 +225,7 @@ interface Request {
 }
 
 type RequestMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE'
-type RequestMode = 'cors' | 'no-cors' | 'same-origin'
+type RequestMode = 'cors' | 'no-cors' | 'same-origin' | 'navigate' | 'websocket'
 type RequestCredentials = 'omit' | 'same-origin' | 'include'
 type RequestCache = 'default' | 'no-store' | 'reload' | 'no-cache' | 'force-cache' | 'only-if-cached'
 type RequestRedirect = 'follow' | 'error' | 'manual'
@@ -292,4 +302,25 @@ interface Headers {
 }
 
 type HeaderName = string
+```
+
+## Client API
+
+```ts
+type FetchOptions = {
+    method: null, // the method is determined by the clients methods
+    headers?: { [name: string]: string }, // maybe default headers to use?
+    body: null, // the body is determined by the post/put arguments
+    mode: 'cors', // for serverside fetch all requests should be processed
+    credentials?: RequestCredentials, // TODO
+    cache: 'no-store', // generally the request should not be cached
+    redirect?: RequestRedirect, // TODO
+    referrer?: RequestReferrer, // TODO 
+    referrerPolicy?: RequestReferrerPolicy, // TODO
+    integrity: null, // the integrity might be calculated with the requests body
+    keepalive?: boolean, // TODO
+    signal: null, // is only relevant to cancel a request, so maybe as request options
+    priority: 'auto' // is only relevant to boost a request, so maybe as request options
+    // ...
+}
 ```
