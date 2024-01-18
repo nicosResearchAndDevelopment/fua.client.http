@@ -5,12 +5,14 @@ const
     strings        = require('@nrd/fua.core.strings'),
     nodeFetch      = require('node-fetch'),
     ClientOptions  = require('./ClientOptions.js'),
-    RequestOptions = require('./RequestOptions.js');
+    RequestOptions = require('./RequestOptions.js'),
+    AsyncResponse  = require('./AsyncResponse.js');
 
 class RequestClient {
 
     /** @type {ClientOptions} */
     options = null;
+    agent   = null;
 
     #fetch    = fetch || nodeFetch;
     #Headers  = Headers || nodeFetch.Headers;
@@ -33,15 +35,17 @@ class RequestClient {
         return response;
     }
 
-    async get(url, headers) {
+    get(url, headers) {
         const
-            param    = new RequestOptions({url, method: 'GET', headers}),
-            target   = new URL(param.url, this.options.baseUrl),
-            request  = new this.#Request(target, {...this.options, ...param}),
-            response = await this.#fetch(request);
+            param   = new RequestOptions({url, method: 'GET', headers}),
+            target  = new URL(param.url, this.options.baseUrl),
+            request = new this.#Request(target, {...this.options, ...param});
 
-        if (!response.ok) throw new errors.http.ResponseError(response);
-        return response;
+        return new AsyncResponse(this.#fetch(request));
+
+        // const response = await this.#fetch(request);
+        // if (!response.ok) throw new errors.http.ResponseError(response);
+        // return response;
 
         // TODO extract the right media-type from comparison between accept and content-type
         // resolver = util.contentResolvers[request.headers.get('Accept') || '*/*'] || util.contentResolvers['*/*'];

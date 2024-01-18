@@ -5,11 +5,19 @@ const
 
 describe('fua.client.http', function () {
 
-    test('develop', function () {
+    test('develop', async function () {
 
-        console.log('HTTP:', HTTP);
-        console.log('HTTP():', HTTP());
-        console.log('new HTTP():', new HTTP());
+        // console.log('HTTP:', HTTP);
+        // console.log('HTTP():', HTTP());
+        // console.log('new HTTP():', new HTTP());
+
+        const client = HTTP({
+            credentials: 'include',
+            baseUrl:     'https://daps.tb.nicos-rd.com/'
+        });
+
+        const result = await client.get('/test').valid().json();
+        console.log(result);
 
     });
 
