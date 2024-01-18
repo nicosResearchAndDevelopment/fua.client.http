@@ -1,13 +1,15 @@
 const
     expect           = require('expect'),
     {describe, test} = require('mocha'),
-    HTTPClient       = require('../src/http.js');
+    HTTP             = require('../src/http.js');
 
 describe('fua.client.http', function () {
 
     test('develop', function () {
 
-        console.log(HTTPClient);
+        console.log('HTTP:', HTTP);
+        console.log('HTTP():', HTTP());
+        console.log('new HTTP():', new HTTP());
 
     });
 

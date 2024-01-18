@@ -307,20 +307,15 @@ type HeaderName = string
 ## Client API
 
 ```ts
-type FetchOptions = {
-    method: null, // the method is determined by the clients methods
-    headers?: { [name: string]: string }, // maybe default headers to use?
-    body: null, // the body is determined by the post/put arguments
-    mode: 'cors', // for serverside fetch all requests should be processed
-    credentials?: RequestCredentials, // TODO
-    cache: 'no-store', // generally the request should not be cached
-    redirect?: RequestRedirect, // TODO
-    referrer?: RequestReferrer, // TODO 
-    referrerPolicy?: RequestReferrerPolicy, // TODO
-    integrity: null, // the integrity might be calculated with the requests body
-    keepalive?: boolean, // TODO
-    signal: null, // is only relevant to cancel a request, so maybe as request options
-    priority: 'auto' // is only relevant to boost a request, so maybe as request options
-    // ...
+type ClientOptions = {
+    // ... TODO
+}
+
+type RequestOptions = {
+    // ... TODO
+}
+
+interface RequestClient {
+    // ... TODO
 }
 ```

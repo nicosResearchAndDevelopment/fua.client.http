@@ -35,7 +35,9 @@ types.FetchOptions = {
     mode:           is.validator.optional(is.validator.enum([
         'cors',
         'no-cors',
-        'same-origin'
+        'same-origin',
+        'navigate',
+        'websocket'
     ])),
     credentials:    is.validator.optional(is.validator.enum([
         'omit',
