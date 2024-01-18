@@ -3,6 +3,8 @@ const
     is             = require('@nrd/fua.core.is'),
     errors         = require('@nrd/fua.core.errors'),
     strings        = require('@nrd/fua.core.strings'),
+    http           = require('http'),
+    https          = require('https'),
     nodeFetch      = require('node-fetch'),
     ClientOptions  = require('./ClientOptions.js'),
     RequestOptions = require('./RequestOptions.js'),
@@ -11,49 +13,71 @@ const
 class RequestClient {
 
     /** @type {ClientOptions} */
-    options = null;
-    agent   = null;
-
-    #fetch    = fetch || nodeFetch;
-    #Headers  = Headers || nodeFetch.Headers;
-    #Request  = Request || nodeFetch.Request;
-    #Response = Response || nodeFetch.Response;
+    #param = null;
+    #fetch = fetch || nodeFetch;
+    #agent = null;
 
     constructor(options) {
-        this.options = new ClientOptions(options);
-        // TODO select the fetch method based on the need for an agent
+        this.#param = new ClientOptions(options);
+
+        // if (false) {
+        //     // TODO select the fetch method based on the need for an agent
+        //     this.#fetch = nodeFetch;
+        //     this.#agent = new (http || https).Agent(this.#param);
+        // }
 
         Object.freeze(this);
     }
 
-    async fetch(url, options) {
-        const
-            param    = new RequestOptions({url, ...options}),
-            target   = new URL(param.url, this.options.baseUrl),
-            request  = new this.#Request(target, {...this.options, ...param}),
-            response = await this.#fetch(request);
-        return response;
-    }
-
     get(url, headers) {
-        const
-            param   = new RequestOptions({url, method: 'GET', headers}),
-            target  = new URL(param.url, this.options.baseUrl),
-            request = new this.#Request(target, {...this.options, ...param});
-
-        return new AsyncResponse(this.#fetch(request));
-
-        // const response = await this.#fetch(request);
-        // if (!response.ok) throw new errors.http.ResponseError(response);
-        // return response;
-
-        // TODO extract the right media-type from comparison between accept and content-type
-        // resolver = util.contentResolvers[request.headers.get('Accept') || '*/*'] || util.contentResolvers['*/*'];
-
-        // return await resolver(response);
+        const param = new RequestOptions({url, method: 'GET', headers});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
     }
 
-    // TODO
+    head(url, headers) {
+        const param = new RequestOptions({url, method: 'HEAD', headers});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
+    }
+
+    post(url, headers, body) {
+        const param = new RequestOptions({url, method: 'POST', headers, body});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
+    }
+
+    put(url, headers, body) {
+        const param = new RequestOptions({url, method: 'PUT', headers, body});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
+    }
+
+    delete(url, headers, body) {
+        const param = new RequestOptions({url, method: 'DELETE', headers, body});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
+    }
+
+    options(url, headers, body) {
+        const param = new RequestOptions({url, method: 'OPTIONS', headers, body});
+        return new AsyncResponse(this.#fetch(
+            new URL(param.url, this.#param.baseUrl),
+            {...this.#param, ...param, agent: this.#agent}
+        ));
+    }
+
+    // TODO CONNECT? TRACE?
 
 }
 
