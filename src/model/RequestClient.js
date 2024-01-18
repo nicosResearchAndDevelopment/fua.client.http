@@ -24,15 +24,20 @@ class RequestClient {
         Object.freeze(this);
     }
 
+    async fetch(url, options) {
+        const
+            param    = new RequestOptions({url, ...options}),
+            target   = new URL(param.url, this.options.baseUrl),
+            request  = new this.#Request(target, {...this.options, ...param}),
+            response = await this.#fetch(request);
+        return response;
+    }
+
     async get(url, headers) {
         const
-            options  = new RequestOptions({url, headers}),
-            request  = new this.#Request(
-                new URL(options.url, this.options.baseUrl), {
-                    ...this.options,
-                    ...options
-                }
-            ),
+            param    = new RequestOptions({url, method: 'GET', headers}),
+            target   = new URL(param.url, this.options.baseUrl),
+            request  = new this.#Request(target, {...this.options, ...param}),
             response = await this.#fetch(request);
 
         if (!response.ok) throw new errors.http.ResponseError(response);

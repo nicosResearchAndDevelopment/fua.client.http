@@ -13,7 +13,7 @@ class ClientOptions {
     static ReferrerPolicy = Enum('no-referrer', 'no-referrer-when-downgrade', 'same-origin', 'origin', 'strict-origin', 'origin-when-cross-origin', 'strict-origin-when-cross-origin', 'unsafe-url');
 
     constructor(options) {
-        // TODO maybe generate optionally from host and port
+        // TODO maybe generate optionally from host and port or leave blank
         this.baseUrl = options?.baseUrl ?? 'http://localhost/';
         assert(is.string(this.baseUrl) && strings.web.url.test(this.baseUrl), 'invalid baseUrl');
 
