@@ -304,6 +304,74 @@ interface Headers {
 type HeaderName = string
 ```
 
+### Undici API
+
+```ts
+declare function fetch(resource: SameOriginURL | URL | Request, options?: RequestOptions & { dispatcher?: Dispatcher }): Promise<Response>
+
+declare abstract class Dispatcher {
+    // ...
+}
+
+declare class Agent extends Dispatcher {
+    // ...
+}
+
+/** @see https://undici.nodejs.org/#/docs/api/Agent?id=parameter-agentoptions */
+type AgentOptions = PoolOptions & {
+    factory?: (origin: URL, opts: Object) => Dispatcher, // = (origin, opts) => new Pool(origin, opts)
+    maxRedirections?: Integer, // = 0
+    interceptors?: { Agent: DispatchInterceptor[] }, // = { Agent: [RedirectInterceptor] }
+}
+
+declare class Pools extends Dispatcher {
+    // ...
+}
+
+/** @see https://undici.nodejs.org/#/docs/api/Pool?id=parameter-pooloptions */
+type PoolOptions = ClientOptions & {
+    factory?: (origin: URL, opts: Object) => Dispatcher, // = (origin, opts) => new Client(origin, opts)
+    connections?: number | null, // = null
+    interceptors?: { Pool: DispatchInterceptor[] }, // = { Pool: [] }
+}
+
+declare class Client extends Dispatcher {
+    // ...
+}
+
+/** @see https://undici.nodejs.org/#/docs/api/Client?id=parameter-clientoptions */
+type ClientOptions = {
+    bodyTimeout?: number | null, // = 300e3
+    headersTimeout?: number | null, // = 300e3
+    keepAliveMaxTimeout?: number | null, // = 600e3
+    keepAliveTimeout?: number | null, // = 4e3
+    keepAliveTimeoutThreshold?: number | null, // = 1e3
+    maxHeaderSize?: number | null, // = 16384
+    maxResponseSize?: number | null, // = -1
+    pipelining?: number | null, // = 1
+    connect?: ConnectOptions | ((opts: ConnectOptions, cb: (err?: Error, socket?: Socket) => void) => void) | null, // = null
+    strictContentLength?: boolean, // = true
+    interceptors?: { Client: DispatchInterceptor[] }, // = { Client: [RedirectInterceptor] }
+    autoSelectFamily?: boolean, // = false
+    autoSelectFamilyAttemptTimeout?: number, // = 250
+    allowH2?: boolean, // = false
+    maxConcurrentStreams?: number, // = 100
+}
+
+/**
+ * @see https://undici.nodejs.org/#/docs/api/Client?id=parameter-connectoptions
+ * @see https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
+ */
+type ConnectOptions = TLSSocketOptions & {
+    socketPath?: string | null, // = null
+    maxCachedSessions?: number | null, // = 100,
+    timeout?: number | null, // = 10e3,
+    servername?: string, // = null
+    keepAlive?: boolean | null, // = true,
+    keepAliveInitialDelay?: number | null, // = 60e3
+}
+```
+
 ## Client API
 
 ```ts

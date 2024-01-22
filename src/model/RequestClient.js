@@ -15,6 +15,7 @@ class RequestClient {
     /** @type {ClientOptions} */
     #param = null;
     #fetch = fetch || nodeFetch;
+    // TODO instead of node-fetch with the agent options the native fetch with the dispatcher options and an undici Agent should be used
     #agent = null;
 
     constructor(options) {
