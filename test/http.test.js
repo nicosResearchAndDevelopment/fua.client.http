@@ -16,7 +16,7 @@ describe('fua.client.http', function () {
             baseUrl:     'https://daps.tb.nicos-rd.com/'
         });
 
-        const result = await client.get('/test').valid().json();
+        const result = await client.get('/jwks.json').valid().json();
         console.log(result);
 
     });
