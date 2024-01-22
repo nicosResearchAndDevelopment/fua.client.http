@@ -324,6 +324,30 @@ type AgentOptions = PoolOptions & {
     interceptors?: { Agent: DispatchInterceptor[] }, // = { Agent: [RedirectInterceptor] }
 }
 
+declare class ProxyAgent extends Dispatcher implements Agent {
+
+}
+
+/** @see https://undici.nodejs.org/#/docs/api/ProxyAgent?id=parameter-proxyagentoptions */
+type ProxyAgentOptions = AgentOptions & {
+    uri: string, // mandatory
+    token?: string,
+    clientFactory?: (origin: URL, opts: Object) => Dispatcher, // (origin, opts) => new Pool(origin, opts)
+    requestTls?: BuildOptions,
+    proxyTls?: BuildOptions
+}
+
+/**
+ * @see https://undici.nodejs.org/#/docs/api/Connector?id=parameter-buildconnectorbuildoptions
+ * @see https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
+ */
+type BuildOptions = TLSSocketOptions & {
+    socketPath?: string | null, // = null
+    maxCachedSessions?: number | null, // = 100,
+    timeout?: number | null, // = 10e3,
+    servername?: string, // = null
+}
+
 declare class Pools extends Dispatcher {
     // ...
 }
@@ -358,15 +382,8 @@ type ClientOptions = {
     maxConcurrentStreams?: number, // = 100
 }
 
-/**
- * @see https://undici.nodejs.org/#/docs/api/Client?id=parameter-connectoptions
- * @see https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
- */
-type ConnectOptions = TLSSocketOptions & {
-    socketPath?: string | null, // = null
-    maxCachedSessions?: number | null, // = 100,
-    timeout?: number | null, // = 10e3,
-    servername?: string, // = null
+/** @see https://undici.nodejs.org/#/docs/api/Client?id=parameter-connectoptions */
+type ConnectOptions = BuildOptions & {
     keepAlive?: boolean | null, // = true,
     keepAliveInitialDelay?: number | null, // = 60e3
 }
