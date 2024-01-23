@@ -1,4 +1,8 @@
-const RequestClient = require('./model/RequestClient.js');
-module.exports      = function HTTP(options) {
-    return new RequestClient(options);
-};
+const
+    model = require('./model.js');
+
+function HTTP(options) {
+    return new model.RequestClient(options);
+}
+
+module.exports = HTTP;

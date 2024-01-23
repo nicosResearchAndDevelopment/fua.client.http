@@ -1,35 +1,24 @@
 const
-    assert            = require('@nrd/fua.core.assert'),
-    is                = require('@nrd/fua.core.is'),
-    errors            = require('@nrd/fua.core.errors'),
-    {Readable}        = require('stream'),
-    ResponseInterface = {
-        url:    is.string.nonempty,
-        status: is.number.integer.positive,
-        body:   is.validator.instance(ReadableStream)
-    };
+    model      = require('../model.js'),
+    assert     = require('@nrd/fua.core.assert'),
+    {Readable} = require('stream');
 
-class AsyncResponse extends Promise {
+class AsyncResponse extends model.Promise {
 
-    static [Symbol.species] = Promise;
+    static [Symbol.species] = model.Promise;
 
-    constructor(responsePromise) {
-        assert.instance(responsePromise, Promise);
-        super(async (resolve, reject) => {
-            try {
-                const response = await responsePromise;
-                assert.object(response, ResponseInterface);
-                resolve(response);
-            } catch (err) {
-                reject(err);
-            }
-        });
+    constructor(promise) {
+        assert.instance(promise, model.Promise);
+        super((resolve, reject) => promise.then(((response) => {
+            assert.instance(response, model.Response);
+            resolve(response);
+        })).catch(reject));
     }
 
     valid() {
         return new AsyncResponse(this.then((response) => {
-            if (!response.ok) throw new errors.http.ResponseError(response);
-            return response;
+            if (response.ok) return response;
+            throw new model.ResponseError(response);
         }));
     }
 
