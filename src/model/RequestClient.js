@@ -5,26 +5,47 @@ const
 
 class RequestClient {
 
-    /** @type {UndiciDispatcher} */ #dispatcher;
-    /** @type {Record<string, any>} */ #options = {};
+    #baseUrl;
+    #defaultOptions;
+    #dispatchAgent;
 
-    constructor(options) {
-        this.#dispatcher = new model.UndiciAgent(options);
+    constructor({
+                    baseUrl = null,
 
-        // this.#options.mode        = options?.mode ?? 'cors';
-        // this.#options.credentials = options?.credentials ?? 'omit';
-        // this.#options.cache       = options?.cache ?? 'no-store';
-        // this.#options.redirect    = options?.redirect ?? 'follow';
+                    method = 'GET',
+                    headers = {},
+                    body = null,
+                    mode = 'cors',
+                    credentials = 'omit',
+                    cache = 'no-store',
+                    redirect = 'follow',
+                    referrer = '',
+                    referrerPolicy = 'no-referrer',
+                    integrity = '',
+                    keepalive = false,
+                    signal = null,
+                    priority = 'auto',
 
-        // TODO options.referrer
-        // TODO options.referrerPolicy
-        // TODO validate options
+                    ...agentOptions
+                } = {}) {
+
+        this.#baseUrl        = baseUrl || undefined;
+        this.#defaultOptions = {
+            method, headers, body, mode, credentials, cache, redirect,
+            referrer, referrerPolicy, integrity, keepalive, signal, priority
+        };
+        this.#dispatchAgent  = new model.UndiciAgent(agentOptions);
     }
 
     fetch(url, options) {
-        return new model.AsyncResponse(model.fetch(url, {
-            ...this.#options, ...options,
-            dispatcher: this.#dispatcher
+        const target = new model.URL(url, this.#baseUrl);
+        return new model.AsyncResponse(model.fetch(target, {
+            ...this.#defaultOptions, ...options,
+            headers:    {...this.#defaultOptions?.headers, ...options?.headers},
+            signal:     (this.#defaultOptions?.signal && options?.signal)
+                            ? model.AbortSignal.any([this.#defaultOptions?.signal, options?.signal])
+                            : this.#defaultOptions?.signal || options?.signal || null,
+            dispatcher: this.#dispatchAgent
         }));
     }
 
@@ -41,6 +62,8 @@ class RequestClient {
             headers: headers
         });
     }
+
+    // TODO auto content-type for the body?
 
     post(url, headers, body) {
         return this.fetch(url, {

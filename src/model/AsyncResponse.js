@@ -7,6 +7,7 @@ class AsyncResponse extends model.Promise {
 
     static [Symbol.species] = model.Promise;
 
+    // IDEA maybe include an AbortController as second argument and add a method to abort the response
     constructor(promise) {
         assert.instance(promise, model.Promise);
         super((resolve, reject) => promise.then(((response) => {

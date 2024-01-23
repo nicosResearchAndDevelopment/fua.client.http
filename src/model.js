@@ -5,8 +5,9 @@ const
     errors  = require('@nrd/fua.core.errors'),
     strings = require('@nrd/fua.core.strings');
 
-model.Promise = Promise;
-model.Enum    = (...args) => Object.freeze(args);
+model.Promise     = Promise;
+model.AbortSignal = AbortSignal;
+model.Enum        = (...args) => Object.freeze(args);
 
 model.UndiciDispatcher = undici.Dispatcher;
 model.UndiciAgent      = undici.Agent;
