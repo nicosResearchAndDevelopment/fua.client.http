@@ -23,8 +23,7 @@ class RequestClient {
 
     fetch(url, options) {
         return new model.AsyncResponse(model.fetch(url, {
-            ...this.#options,
-            ...options,
+            ...this.#options, ...options,
             dispatcher: this.#dispatcher
         }));
     }

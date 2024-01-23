@@ -392,15 +392,31 @@ type ConnectOptions = BuildOptions & {
 ## Client API
 
 ```ts
-type ClientOptions = {
-    // ... TODO
+declare class AsyncResponse<Ext = {}> extends Promise<Response & Ext> {
+    constructor(promise: Promise<Response>): AsyncResponse
+
+    valid(): AsyncResponse<{ ok: true }>
+
+    readableStream(): Promise<ReadableStream>
+    readable(): Promise<import('stream').Readable>
+    blob(): Promise<Blob>
+    arrayBuffer(): Promise<ArrayBuffer>
+    buffer(): Promise<Buffer>
+    formData(): Promise<FormData>
+    json(): Promise<any>
+    text(): Promise<string>
 }
 
-type RequestOptions = {
-    // ... TODO
-}
+declare class RequestClient {
+    constructor(options?: AgentOptions & RequestOptions): RequestClient
 
-interface RequestClient {
-    // ... TODO
+    fetch(url: string | URL, options?: RequestOptions): AsyncResponse
+
+    get(url, headers?): AsyncResponse
+    head(url, headers?): AsyncResponse
+    post(url, headers?, body?): AsyncResponse
+    put(url, headers?, body?): AsyncResponse
+    delete(url, headers?, body?): AsyncResponse
+    options(url, headers?, body?): AsyncResponse
 }
 ```
