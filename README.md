@@ -392,6 +392,18 @@ type ConnectOptions = BuildOptions & {
 ## Client API
 
 ```ts
+interface ResponseMixin {
+    blob(): Promise<Blob>
+    arrayBuffer(): Promise<ArrayBuffer>
+    formData(): Promise<FormData>
+    json(): Promise<any>
+    text(): Promise<string>
+    
+    readableStream(): ReadableStream
+    readable(): import('stream').Readable
+    buffer(): Promise<Buffer>
+}
+
 declare class AsyncResponse<Ext = {}> extends Promise<Response & Ext> {
     constructor(promise: Promise<Response>): AsyncResponse
 
