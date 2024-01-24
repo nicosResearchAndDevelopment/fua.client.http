@@ -2,6 +2,7 @@ const
     model   = exports,
     url     = require('url'),
     undici  = require('undici'),
+    stream  = require('stream'),
     errors  = require('@nrd/fua.core.errors'),
     strings = require('@nrd/fua.core.strings');
 
@@ -9,16 +10,21 @@ model.Promise     = Promise;
 model.AbortSignal = AbortSignal;
 model.Enum        = (...args) => Object.freeze(args);
 
+model.Readable       = stream.Readable;
+model.ReadableStream = ReadableStream;
+model.Writable       = stream.Writable;
+
 model.UndiciDispatcher = undici.Dispatcher;
 model.UndiciAgent      = undici.Agent;
 
 model.URL             = url.URL;
 model.URLSearchParams = url.URLSearchParams;
 
-model.Request  = undici.Request;
+model.Request = undici.Request;
+/** @mixes ResponseMixin */
 model.Response = undici.Response;
-model.Headers  = undici.Headers;
-model.fetch    = undici.fetch;
+model.Headers = undici.Headers;
+model.fetch   = undici.fetch;
 
 model.Mode           = model.Enum('cors', 'no-cors', 'same-origin', 'navigate', 'websocket');
 model.Credentials    = model.Enum('omit', 'same-origin', 'include');
@@ -36,3 +42,5 @@ model.ResponseError = errors.http.ResponseError;
 
 model.AsyncResponse = require('./model/AsyncResponse.js');
 model.RequestClient = require('./model/RequestClient.js');
+model.ResponseMixin = require('./model/ResponseMixin.js');
+Object.assign(model.Response.prototype, model.ResponseMixin);

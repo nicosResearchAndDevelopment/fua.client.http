@@ -89,15 +89,7 @@ class RequestClient {
         });
     }
 
-    options(url, headers, body) {
-        return this.fetch(url, {
-            method:  'OPTIONS',
-            headers: headers,
-            body:    body
-        });
-    }
-
-    // TODO CONNECT? TRACE?
+    // TODO OPTIONS? CONNECT? TRACE?
 
 }
 

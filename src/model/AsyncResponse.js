@@ -3,11 +3,15 @@ const
     assert     = require('@nrd/fua.core.assert'),
     {Readable} = require('stream');
 
+/**
+ * @template {{}} Ext
+ * @extends {Promise<Response & Ext>}
+ */
 class AsyncResponse extends model.Promise {
 
     static [Symbol.species] = model.Promise;
 
-    // IDEA maybe include an AbortController as second argument and add a method to abort the response
+    /** @param {Promise<Response>} promise */
     constructor(promise) {
         assert.instance(promise, model.Promise);
         super((resolve, reject) => promise.then(((response) => {
@@ -16,6 +20,10 @@ class AsyncResponse extends model.Promise {
         })).catch(reject));
     }
 
+    // IDEA maybe include an AbortController as second constructor argument and add a method to abort the response
+    // abort() { }
+
+    /** @returns {AsyncResponse<{ ok: true }>} */
     valid() {
         return new AsyncResponse(this.then((response) => {
             if (response.ok) return response;
@@ -23,34 +31,42 @@ class AsyncResponse extends model.Promise {
         }));
     }
 
+    /** @returns {Promise<ReadableStream>} */
     readableStream() {
-        return this.then(response => response.body);
+        return this.then(response => response.readableStream());
     }
 
+    /** @returns {Promise<Readable>} */
     readable() {
-        return this.readableStream().then(Readable.fromWeb);
+        return this.then(response => response.readable());
     }
 
+    /** @returns {Promise<Blob>} */
     blob() {
         return this.then(response => response.blob());
     }
 
+    /** @returns {Promise<ArrayBuffer>} */
     arrayBuffer() {
         return this.then(response => response.arrayBuffer());
     }
 
+    /** @returns {Promise<Buffer>} */
     buffer() {
-        return this.arrayBuffer().then(Buffer.from);
+        return this.then(response => response.buffer());
     }
 
+    /** @returns {Promise<FormData>} */
     formData() {
         return this.then(response => response.formData());
     }
 
+    /** @returns {Promise<any>} */
     json() {
         return this.then(response => response.json());
     }
 
+    /** @returns {Promise<text>} */
     text() {
         return this.then(response => response.text());
     }

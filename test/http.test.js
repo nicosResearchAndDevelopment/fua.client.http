@@ -19,9 +19,12 @@ describe('fua.client.http', function () {
         const result = await client.get('/jwks.json').valid().json();
         console.log(result);
 
-        // const client = HTTP({connect: {rejectUnauthorized: false}});
-        // console.log(await client.get('https://daps.tb.nicos-rd.com/').valid().json());
-
+        // const client   = HTTP({connect: {rejectUnauthorized: false}});
+        // // console.log(await client.get('https://daps.tb.nicos-rd.com/').valid().buffer());
+        // const response = await client.get('https://daps.tb.nicos-rd.com/').valid();
+        // console.log(await response.text());
+        // console.log(await response.readable());
+        // // console.log(await response.buffer());
     });
 
 });
