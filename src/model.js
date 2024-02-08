@@ -17,8 +17,11 @@ model.Writable       = stream.Writable;
 model.UndiciDispatcher = undici.Dispatcher;
 model.UndiciAgent      = undici.Agent;
 
+model.InternalFormData = FormData;
+
 model.URL             = url.URL;
 model.URLSearchParams = url.URLSearchParams;
+model.FormData        = undici.FormData;
 
 model.Request = undici.Request;
 /** @mixes ResponseMixin */
