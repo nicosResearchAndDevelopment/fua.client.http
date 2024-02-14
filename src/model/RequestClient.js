@@ -1,5 +1,6 @@
 const
     model  = require('../model.js'),
+    util   = require('../util.js'),
     assert = require('@nrd/fua.core.assert'),
     is     = require('@nrd/fua.core.is');
 
@@ -37,16 +38,38 @@ class RequestClient {
         this.#dispatchAgent  = new model.UndiciAgent(agentOptions);
     }
 
+    // fetch(url, options) {
+    //     const target  = new model.URL(url, this.#baseUrl);
+    //     const promise = model.fetch(target, {
+    //         ...this.#defaultOptions, ...options,
+    //         headers:    {...this.#defaultOptions?.headers, ...options?.headers},
+    //         signal:     (this.#defaultOptions?.signal && options?.signal)
+    //                         ? model.AbortSignal.any([this.#defaultOptions?.signal, options?.signal])
+    //                         : this.#defaultOptions?.signal || options?.signal || null,
+    //         dispatcher: this.#dispatchAgent
+    //     });
+    //     return new model.AsyncResponse(promise);
+    // }
+
     fetch(url, options) {
-        const target = new model.URL(url, this.#baseUrl);
-        return new model.AsyncResponse(model.fetch(target, {
-            ...this.#defaultOptions, ...options,
-            headers:    {...this.#defaultOptions?.headers, ...options?.headers},
+        const target                 = new model.URL(url, this.#baseUrl);
+        const {content, contentType} = util.parseBodyContent(options?.body);
+        if (!is.null(options?.body)) assert(!is.null(content), 'invalid content');
+        const request = new model.Request(target, {
+            ...this.#defaultOptions,
+            ...options,
+            headers:    {
+                'Content-Type': contentType,
+                ...this.#defaultOptions?.headers,
+                ...options?.headers
+            },
             signal:     (this.#defaultOptions?.signal && options?.signal)
                             ? model.AbortSignal.any([this.#defaultOptions?.signal, options?.signal])
                             : this.#defaultOptions?.signal || options?.signal || null,
+            body:       content,
             dispatcher: this.#dispatchAgent
-        }));
+        });
+        return new model.AsyncRequest(request);
     }
 
     get(url, headers) {
