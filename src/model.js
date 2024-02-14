@@ -1,10 +1,11 @@
 const
-    model   = exports,
-    url     = require('url'),
-    undici  = require('undici'),
-    stream  = require('stream'),
-    errors  = require('@nrd/fua.core.errors'),
-    strings = require('@nrd/fua.core.strings');
+    model       = exports,
+    url         = require('url'),
+    undici      = require('undici'),
+    stream      = require('stream'),
+    errors      = require('@nrd/fua.core.errors'),
+    strings     = require('@nrd/fua.core.strings'),
+    persistence = require('@nrd/fua.module.persistence');
 
 model.Promise     = Promise;
 model.AbortSignal = AbortSignal;
@@ -13,6 +14,9 @@ model.Enum        = (...args) => Object.freeze(args);
 model.Readable       = stream.Readable;
 model.ReadableStream = ReadableStream;
 model.Writable       = stream.Writable;
+
+model.TermFactory = persistence.TermFactory;
+model.Dataset     = persistence.Dataset;
 
 model.UndiciDispatcher = undici.Dispatcher;
 model.UndiciAgent      = undici.Agent;
@@ -28,6 +32,7 @@ model.Request = undici.Request;
 model.Response = undici.Response;
 model.Headers = undici.Headers;
 model.fetch   = undici.fetch;
+/** @typedef {Blob | ArrayBuffer | TypedArray | DataView | FormData | URLSearchParams | string | String | ReadableStream} Body */
 
 model.Mode           = model.Enum('cors', 'no-cors', 'same-origin', 'navigate', 'websocket');
 model.Credentials    = model.Enum('omit', 'same-origin', 'include');

@@ -27,4 +27,10 @@ describe('fua.client.http', function () {
         // // console.log(await response.buffer());
     });
 
+    test('response.dataset', async function () {
+        this.timeout('10s');
+        const dataset = await HTTP().get('http://www.w3.org/1999/02/22-rdf-syntax-ns#', {'Accept': 'text/turtle'}).valid().dataset();
+        console.log(dataset, 'size=' + dataset.size);
+    });
+
 });

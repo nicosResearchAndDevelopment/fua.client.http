@@ -1,7 +1,6 @@
 const
-    model      = require('../model.js'),
-    assert     = require('@nrd/fua.core.assert'),
-    {Readable} = require('stream');
+    model  = require('../model.js'),
+    assert = require('@nrd/fua.core.assert');
 
 /**
  * @template {{}} Ext
@@ -66,23 +65,18 @@ class AsyncResponse extends model.Promise {
         return this.then(response => response.json());
     }
 
-    /** @returns {Promise<text>} */
+    /** @returns {Promise<string>} */
     text() {
         return this.then(response => response.text());
     }
 
-    // dataset() {
-    //     assert.todo(/* TODO */);
-    //     // return this.then((response) => {
-    //     //     const textStream  = Readable.fromWeb(response.body);
-    //     //     const contentType = response.headers.get('Content-Type') || 'text/turtle';
-    //     //     const factory     = new TermFactory();
-    //     //     const targetURI   = new URL(response.url);
-    //     //     const baseIRI     = targetURI.protocol + '//' + targetURI.hostname + targetURI.pathname.replace(/([/#])[^/#]*$/, '$1');
-    //     //     const baseIRI     = targetURI.protocol + '//' + targetURI.hostname + targetURI.pathname + (/[/#]$/.test(targetURI.pathname) ? '' : '#');
-    //     //     rdf.parseStream(textStream, contentType, factory, baseIRI)
-    //     // });
-    // }
+    /**
+     * @param {TermFactory} [factory]
+     * @returns {Promise<Dataset>}
+     */
+    dataset(factory) {
+        return this.then(response => response.dataset(factory));
+    }
 
 }
 
