@@ -1,0 +1,8 @@
+{
+  "id": "hello",
+  "label": "Hello World!",
+  "test": {
+    "id": "lorem",
+    "label": "Lorem Ipsum"
+  }
+}

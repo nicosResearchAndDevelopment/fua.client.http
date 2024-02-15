@@ -1,8 +1,9 @@
 const
     util   = exports,
+    model  = require('./model.js'),
     assert = require('@nrd/fua.core.assert'),
     is     = require('@nrd/fua.core.is'),
-    model  = require('./model.js');
+    rdf    = require('@nrd/fua.module.rdf');
 
 /**
  * TODO this should simplify requests with auto-detection of content-types and auto-parsing of the content
@@ -45,6 +46,10 @@ util.parseBodyContent = function (data) {
                          : 'application/json',
         content:     JSON.stringify(data)
     };
+    // if (data instanceof model.Dataset) return {
+    //     contentType: 'text/turtle',
+    //     content:     await rdf.serializeDataset(data, 'text/turtle')
+    // };
     return {
         contentType: undefined,
         content:     null

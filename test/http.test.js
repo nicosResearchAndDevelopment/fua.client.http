@@ -3,22 +3,28 @@ const
     {describe, test, before, after} = require('mocha'),
     HTTP                            = require('../src/http.js'),
     {Dataset}                       = require('@nrd/fua.module.persistence'),
+    errors                          = require('@nrd/fua.core.errors'),
+    path                            = require('path'),
     http                            = require('http'),
     https                           = require('https'),
-    express                         = require('express');
+    express                         = require('express'),
+    serverConf                      = require('./cert/server.js'),
+    clientConf                      = require('./cert/client.js');
 
 describe('fua.client.http', function () {
 
     const local = Object.create(null);
 
-    before('init test server', async function () {
+    local.httpPort  = 3080;
+    local.httpsPort = 3443;
 
-        local.httpPort  = 3000;
-        local.httpsPort = 3001;
+    local.httpBaseUrl  = `http://localhost:${local.httpPort}/`;
+    local.httpsBaseUrl = `https://localhost:${local.httpsPort}/`;
 
-        local.expressApp  = express();
-        local.httpServer  = http.createServer(local.expressApp);
-        local.httpsServer = https.createServer({}, local.expressApp);
+    before('init server', async function () {
+        local.expressApp = express();
+
+        local.expressApp.use('/data', express.static(path.join(__dirname, 'data')));
 
         local.expressApp.get('/hello', (request, response) => {
             response.format({
@@ -38,75 +44,72 @@ describe('fua.client.http', function () {
             response.send(request.body);
         });
 
+        local.expressApp.all('/status/:code', (request, response) => {
+            const statusCode = (request.params.code in errors.http.statusCodes) ? Number(request.params.code) : 404;
+            response.status(statusCode).send(errors.http.statusCodes[statusCode]);
+        });
+
+        local.httpServer  = http.createServer(local.expressApp);
+        local.httpsServer = https.createServer(serverConf, local.expressApp);
+
         await Promise.all([
             new Promise(resolve => local.httpServer.listen(local.httpPort, resolve)),
             new Promise(resolve => local.httpsServer.listen(local.httpsPort, resolve))
         ]);
-
-        local.httpBaseUrl  = `http://localhost:${local.httpPort}/`;
-        local.httpsBaseUrl = `https://localhost:${local.httpsPort}/`;
-
     });
 
-    after('close test server', async function () {
+    after('close server', async function () {
         local.httpServer.close();
         local.httpsServer.close();
     });
 
-    test('develop', async function () {
-        // console.log('HTTP:', HTTP);
-        // console.log('HTTP():', HTTP());
-        // console.log('new HTTP():', new HTTP());
-    });
-
     describe('GET', function () {
 
+        before('init client', async function () {
+            local.httpClient  = HTTP({baseUrl: local.httpBaseUrl});
+            local.httpsClient = HTTP({baseUrl: local.httpsBaseUrl, ...clientConf});
+        });
+
         test('develop', async function () {
-            const client = HTTP({baseUrl: local.httpBaseUrl});
-            console.log(await client.get('/hello').accept('json').valid().json());
-            console.log(await client.get('/hello').accept('text').valid().text());
+            // console.log(await local.httpClient.get('/hello').accept('json').valid().json());
+            // console.log(await local.httpClient.get('/hello').accept('text').valid().text());
+
+            console.log(await local.httpClient.get('/status/499').valid().text());
+        });
+
+        test('Dataset: /data/example.ttl', async function () {
+            const dataset = await local.httpClient.get('/data/example.ttl').dataset();
+            expect(dataset).toBeInstanceOf(Dataset);
+            expect(dataset.size).toBeGreaterThan(0);
+        });
+
+        test('accept: /hello', async function () {
+            const json = await local.httpClient.get('/hello').accept('text', .2).accept('json', .8).json();
+            expect(json).toEqual({'Hello': 'World!'});
+            const text = await local.httpClient.get('/hello').accept('text', .8).accept('json', .2).text();
+            expect(text).toBe('Hello World!');
+        });
+
+        test('valid: /status', async function () {
+            await expect(local.httpClient.get('/status/100').valid()).rejects.toThrow();
+            await expect(local.httpClient.get('/status/200').valid()).resolves.not.toThrow();
+            await expect(local.httpClient.get('/status/300').valid()).rejects.toThrow();
+            await expect(local.httpClient.get('/status/400').valid()).rejects.toThrow();
+            await expect(local.httpClient.get('/status/500').valid()).rejects.toThrow();
         });
 
     });
 
     describe('POST', function () {
 
+        before('init client', async function () {
+            local.httpClient  = HTTP({baseUrl: local.httpBaseUrl});
+            local.httpsClient = HTTP({baseUrl: local.httpsBaseUrl, ...clientConf});
+        });
+
         test('develop', async function () {
             const client = HTTP({baseUrl: local.httpBaseUrl});
-            console.log(await client.post('ping').send({'lorem': 'ipsum'}).valid().text()); // FIXME
-        });
-
-    });
-
-    describe('AsyncRequest/AsyncResponse', function () {
-
-        test('develop', async function () {
-            const client = HTTP({
-                credentials: 'include',
-                baseUrl:     'https://daps.tb.nicos-rd.com/'
-            });
-
-            const result = await client.get('/jwks.json').valid().json();
-            console.log(result);
-
-            // const client   = HTTP({connect: {rejectUnauthorized: false}});
-            // // console.log(await client.get('https://daps.tb.nicos-rd.com/').valid().buffer());
-            // const response = await client.get('https://daps.tb.nicos-rd.com/').valid();
-            // console.log(await response.text());
-            // console.log(await response.readable());
-            // // console.log(await response.buffer());
-        });
-
-        test('dataset()', async function () {
-            const dataset = await HTTP().get('http://www.w3.org/1999/02/22-rdf-syntax-ns#', {'Accept': 'text/turtle'}).valid().dataset();
-            expect(dataset).toBeInstanceOf(Dataset);
-            expect(dataset.size).toBeGreaterThan(0);
-        });
-
-        test('accept()', async function () {
-            const result = await HTTP().fetch('http://www.w3.org/1999/02/22-rdf-syntax-ns#').accept('jsonld', .2).accept('ttl', .8).valid().text();
-            // const result = await HTTP().request('https://daps.tb.nicos-rd.com/jwks.json').accept('json').valid().json();
-            console.log(result);
+            console.log(await client.post('/ping').send({'lorem': 'ipsum'}).valid().text()); // FIXME
         });
 
     });
