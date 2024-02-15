@@ -18,6 +18,13 @@ class AsyncRequest extends model.Promise {
     constructor(request) {
         assert.instance(request, model.Request);
         super((resolve, reject) => process.nextTick(() => model.fetch(this.#request).then(resolve).catch(reject)));
+        // TODO lock the request when it is fetched
+        // IDEA maybe combine AsyncRequest and AsyncResponse, although this will be tricky because of the different states:
+        //      - pre-request: body still needs to be parsed (maybe workaround with a readable stream)
+        //      - request: can be manipulated before fetching
+        //      - post-request: is fetching the response, can be canceled with an AbortController
+        //      - response: the response arrived and can be used
+        //      - post-response: the response body is consumed and cannot be consumed again
         this.#request = request;
     }
 
