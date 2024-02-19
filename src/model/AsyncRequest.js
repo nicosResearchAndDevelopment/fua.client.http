@@ -109,10 +109,10 @@ class AsyncRequest extends model.Promise {
         assert(!this.#request.body, 'body already defined');
         const {content, contentType} = util.parseBodyContent(body);
         assert(!is.null(content), 'invalid content');
-        this.#request = new model.Request(this.#request, (this.#request.headers.has('Content-Type') || !contentType) ? {
-            body: content
-        } : {
-            headers: {'Content-Type': contentType},
+        this.#request = new model.Request(this.#request, {
+            headers: (contentType && !this.#request.headers.has('Content-Type')) ? {
+                'Content-Type': contentType
+            } : undefined,
             body:    content
         });
         return this;

@@ -26,11 +26,12 @@ util.parseBodyContent = function (data) {
         content:     data
     };
     if (data instanceof Blob) return {
-        contentType: data.type || '',
+        contentType: data.type || undefined,
         content:     data
     };
     if ((data instanceof Buffer) || (data instanceof ArrayBuffer) || is.typedarray(data)) return {
-        content: data
+        contentType: 'application/octet-stream',
+        content:     data
     };
     if ((data instanceof model.FormData) || (data instanceof model.InternalFormData)) return {
         contentType: Array.from(data.values()).every(is.string)
@@ -57,7 +58,7 @@ util.parseBodyContent = function (data) {
         content:     rdf.serializeStream(data.toStream(), 'text/turtle', data.factory)
     };
     return {
-        contentType: '',
+        contentType: undefined,
         content:     null
     };
 };

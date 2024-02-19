@@ -55,20 +55,16 @@ class RequestClient {
         const target                 = new model.URL(url, this.#baseUrl);
         const {content, contentType} = util.parseBodyContent(options?.body);
         assert(is.null(options?.body) || !is.null(content), 'invalid content');
+        const defaultHeaders = {};
+        if (contentType) defaultHeaders['Content-Type'] = contentType;
         const request = new model.Request(target, {
             ...this.#defaultOptions,
             ...options,
-            headers:    contentType ? {
-                'Content-Type': contentType,
-                ...this.#defaultOptions?.headers,
-                ...options?.headers
-            } : {
+            headers:    {
+                ...defaultHeaders,
                 ...this.#defaultOptions?.headers,
                 ...options?.headers
             },
-            signal:     (this.#defaultOptions?.signal && options?.signal)
-                            ? model.AbortSignal.any([this.#defaultOptions?.signal, options?.signal])
-                            : this.#defaultOptions?.signal || options?.signal || null,
             body:       content,
             dispatcher: this.#dispatchAgent
         });
