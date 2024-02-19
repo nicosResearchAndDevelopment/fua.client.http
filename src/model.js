@@ -2,15 +2,6 @@ const
     model       = exports,
     url         = require('url'),
     undici      = require('undici'),
-    mime        = require('mime'),
-    // Mime            = require('mime/Mime'),
-    // standardTypes   = require('mime/types/standard'),
-    // otherTypes      = require('mime/types/other'),
-    // additionalTypes = {
-    //     'text/turtle':         ['turtle', 'ttl']
-    // },
-    // mime            = new Mime(standardTypes, otherTypes, additionalTypes),
-    cookie      = require('cookie'),
     stream      = require('stream'),
     errors      = require('@nrd/fua.core.errors'),
     strings     = require('@nrd/fua.core.strings'),
@@ -35,8 +26,6 @@ model.InternalFormData = FormData;
 model.URL             = url.URL;
 model.URLSearchParams = url.URLSearchParams;
 model.FormData        = undici.FormData;
-model.Cookie          = cookie.serialize;
-model.ContentType     = mime.getType;
 
 model.Request       = undici.Request;
 model.ResponseMixin = require('./model/ResponseMixin.js');
@@ -60,6 +49,8 @@ model.Priority = model.Enum('high', 'low', 'auto');
 
 model.RequestError  = errors.http.RequestError;
 model.ResponseError = errors.http.ResponseError;
+
+model.MediaType = require('./model/MediaType.js');
 
 model.AsyncMixin    = require('./model/AsyncMixin.js');
 model.AsyncResponse = require('./model/AsyncResponse.js');

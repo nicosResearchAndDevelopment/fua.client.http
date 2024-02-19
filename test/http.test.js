@@ -37,11 +37,15 @@ describe('fua.client.http', function () {
             })
         });
 
-        local.expressApp.post('/ping', express.raw(), (request, response) => {
+        local.expressApp.post('/ping', express.raw({type: '*/*'}), (request, response) => {
             const contentType = request.get('Content-Type');
             if (contentType) response.type(contentType);
-            console.log('PING', {contentType, content: request.body});
             response.send(request.body);
+        });
+
+        local.expressApp.post('/ping/type', (request, response) => {
+            const contentType = request.get('Content-Type');
+            response.send(contentType || '');
         });
 
         local.expressApp.all('/status/:code', (request, response) => {
@@ -74,7 +78,7 @@ describe('fua.client.http', function () {
             // console.log(await local.httpClient.get('/hello').accept('json').valid().json());
             // console.log(await local.httpClient.get('/hello').accept('text').valid().text());
 
-            console.log(await local.httpClient.get('/status/499').valid().text());
+            // console.log(await local.httpClient.get('/status/499').valid().text());
         });
 
         test('Dataset: /data/example.ttl', async function () {
@@ -108,8 +112,22 @@ describe('fua.client.http', function () {
         });
 
         test('develop', async function () {
-            const client = HTTP({baseUrl: local.httpBaseUrl});
-            console.log(await client.post('/ping').send({'lorem': 'ipsum'}).valid().text()); // FIXME
+            // console.log(await local.httpClient.post('/ping').send({'lorem': 'ipsum'}).valid().json());
+        });
+
+        test('text: /ping', async function () {
+            expect(await local.httpClient.post('/ping').send('Hello World!').text()).toBe('Hello World!');
+        });
+
+        test('json: /ping', async function () {
+            expect(await local.httpClient.post('/ping').send({'lorem': 'ipsum'}).json()).toEqual({'lorem': 'ipsum'});
+            expect(await local.httpClient.post('/ping').send('{"lorem": "ipsum"}').json()).toEqual({'lorem': 'ipsum'});
+        });
+
+        test('type: /ping/type', async function () {
+            expect(await local.httpClient.post('/ping/type').send({'lorem': 'ipsum'}).text()).toEqual('application/json');
+            expect(await local.httpClient.post('/ping/type').send('{"lorem": "ipsum"}').text()).toEqual('text/plain');
+            expect(await local.httpClient.post('/ping/type').type('json').send('{"lorem": "ipsum"}').text()).toEqual('application/json');
         });
 
     });

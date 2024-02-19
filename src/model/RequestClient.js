@@ -54,12 +54,15 @@ class RequestClient {
     fetch(url, options) {
         const target                 = new model.URL(url, this.#baseUrl);
         const {content, contentType} = util.parseBodyContent(options?.body);
-        if (!is.null(options?.body)) assert(!is.null(content), 'invalid content');
+        assert(is.null(options?.body) || !is.null(content), 'invalid content');
         const request = new model.Request(target, {
             ...this.#defaultOptions,
             ...options,
-            headers:    {
+            headers:    contentType ? {
                 'Content-Type': contentType,
+                ...this.#defaultOptions?.headers,
+                ...options?.headers
+            } : {
                 ...this.#defaultOptions?.headers,
                 ...options?.headers
             },
@@ -85,8 +88,6 @@ class RequestClient {
             headers: headers
         });
     }
-
-    // TODO auto content-type for the body?
 
     post(url, headers, body) {
         return this.fetch(url, {

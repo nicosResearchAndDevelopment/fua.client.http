@@ -1,5 +1,70 @@
 # @nrd/fua.client.http
 
+## Client API
+
+```ts
+import {Readable} from 'stream';
+import {Request, Response, Headers, FormData} from 'undici';
+import {TermFactory, Dataset} from '@nrd/fua.module.persistence';
+
+interface ResponseMixin {
+    blob(): Promise<Blob>
+    arrayBuffer(): Promise<ArrayBuffer>
+    formData(): Promise<FormData>
+    json(): Promise<any>
+    text(): Promise<string>
+
+    readableStream(): ReadableStream
+    readable(): Readable
+    buffer(): Promise<Buffer>
+    dataset(factory?: TermFactory): Promise<Dataset>
+}
+
+interface AsyncMixin {
+    readableStream(): Promise<ReadableStream>
+    readable(): Promise<Readable>
+    blob(): Promise<Blob>
+    arrayBuffer(): Promise<ArrayBuffer>
+    buffer(): Promise<Buffer>
+    formData(): Promise<FormData>
+    json(): Promise<any>
+    text(): Promise<string>
+    dataset(factory?: TermFactory): Promise<Dataset>
+}
+
+declare class AsyncResponse<Ext = {}> extends Promise<Response & Ext>, AsyncMixin {
+    constructor(promise: Promise<Response>): AsyncResponse
+
+    valid(): AsyncResponse<{ ok: true }>
+}
+
+declare class AsyncRequest extends Promise<Response>, AsyncMixin {
+    constructor(request: Request): AsyncRequest
+
+    method(method: string): this
+    header(field: string | Record<string, string>, value?: string): this
+    type(value: string): this
+    accept(value: string, weight?: number): this
+    cookie(name: string, value: string, options?: Record<string, string>): this
+    send(body: Blob | ArrayBuffer | TypedArray | DataView | FormData | URLSearchParams | string | String | ReadableStream | Dataset): this
+
+    valid(): AsyncResponse<{ ok: true }>
+}
+
+declare class RequestClient {
+    constructor(options?: AgentOptions & RequestOptions): RequestClient
+
+    fetch(url: string | URL, options?: RequestOptions): AsyncRequest
+
+    get(url, headers?): AsyncRequest
+    head(url, headers?): AsyncRequest
+    post(url, headers?, body?): AsyncRequest
+    put(url, headers?, body?): AsyncRequest
+    delete(url, headers?, body?): AsyncRequest
+    options(url, headers?, body?): AsyncRequest
+}
+```
+
 ## Common HTTP APIs
 
 ### Node HTTP/HTTPS
@@ -386,49 +451,5 @@ type ClientOptions = {
 type ConnectOptions = BuildOptions & {
     keepAlive?: boolean | null, // = true,
     keepAliveInitialDelay?: number | null, // = 60e3
-}
-```
-
-## Client API
-
-```ts
-interface ResponseMixin {
-    blob(): Promise<Blob>
-    arrayBuffer(): Promise<ArrayBuffer>
-    formData(): Promise<FormData>
-    json(): Promise<any>
-    text(): Promise<string>
-    
-    readableStream(): ReadableStream
-    readable(): import('stream').Readable
-    buffer(): Promise<Buffer>
-}
-
-declare class AsyncResponse<Ext = {}> extends Promise<Response & Ext> {
-    constructor(promise: Promise<Response>): AsyncResponse
-
-    valid(): AsyncResponse<{ ok: true }>
-
-    readableStream(): Promise<ReadableStream>
-    readable(): Promise<import('stream').Readable>
-    blob(): Promise<Blob>
-    arrayBuffer(): Promise<ArrayBuffer>
-    buffer(): Promise<Buffer>
-    formData(): Promise<FormData>
-    json(): Promise<any>
-    text(): Promise<string>
-}
-
-declare class RequestClient {
-    constructor(options?: AgentOptions & RequestOptions): RequestClient
-
-    fetch(url: string | URL, options?: RequestOptions): AsyncResponse
-
-    get(url, headers?): AsyncResponse
-    head(url, headers?): AsyncResponse
-    post(url, headers?, body?): AsyncResponse
-    put(url, headers?, body?): AsyncResponse
-    delete(url, headers?, body?): AsyncResponse
-    options(url, headers?, body?): AsyncResponse
 }
 ```

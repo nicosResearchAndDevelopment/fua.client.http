@@ -3,7 +3,13 @@ const
     model  = require('./model.js'),
     assert = require('@nrd/fua.core.assert'),
     is     = require('@nrd/fua.core.is'),
-    rdf    = require('@nrd/fua.module.rdf');
+    rdf    = require('@nrd/fua.module.rdf'),
+    undici = require('undici');
+
+util.getCookies    = undici.getCookies;
+util.getSetCookies = undici.getSetCookies;
+util.setCookie     = undici.setCookie;
+util.deleteCookie  = undici.deleteCookie;
 
 /**
  * TODO this should simplify requests with auto-detection of content-types and auto-parsing of the content
@@ -20,7 +26,7 @@ util.parseBodyContent = function (data) {
         content:     data
     };
     if (data instanceof Blob) return {
-        contentType: data.type || undefined,
+        contentType: data.type || '',
         content:     data
     };
     if ((data instanceof Buffer) || (data instanceof ArrayBuffer) || is.typedarray(data)) return {
@@ -46,12 +52,12 @@ util.parseBodyContent = function (data) {
                          : 'application/json',
         content:     JSON.stringify(data)
     };
-    // if (data instanceof model.Dataset) return {
-    //     contentType: 'text/turtle',
-    //     content:     await rdf.serializeDataset(data, 'text/turtle')
-    // };
+    if (data instanceof model.Dataset) return {
+        contentType: 'text/turtle',
+        content:     rdf.serializeStream(data.toStream(), 'text/turtle', data.factory)
+    };
     return {
-        contentType: undefined,
+        contentType: '',
         content:     null
     };
 };
