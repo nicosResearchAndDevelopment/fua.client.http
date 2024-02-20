@@ -33,9 +33,10 @@ interface AsyncMixin {
 }
 
 declare class AsyncResponse<Ext = {}> extends Promise<Response & Ext>, AsyncMixin {
-    constructor(promise: Promise<Response>): AsyncResponse
+    constructor(promise: Promise<Response>, controller?: AbortController): AsyncResponse
 
     valid(): AsyncResponse<{ ok: true }>
+    abort(reason?: Error): void
 }
 
 declare class AsyncRequest extends Promise<Response>, AsyncMixin {
@@ -49,6 +50,7 @@ declare class AsyncRequest extends Promise<Response>, AsyncMixin {
     send(body: Blob | ArrayBuffer | TypedArray | DataView | FormData | URLSearchParams | string | String | ReadableStream | Dataset): this
 
     valid(): AsyncResponse<{ ok: true }>
+    abort(reason?: Error): void
 }
 
 declare class RequestClient {

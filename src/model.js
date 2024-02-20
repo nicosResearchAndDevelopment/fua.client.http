@@ -7,9 +7,14 @@ const
     strings     = require('@nrd/fua.core.strings'),
     persistence = require('@nrd/fua.module.persistence');
 
-model.Promise     = Promise;
-model.AbortSignal = AbortSignal;
-model.Enum        = (...args) => Object.freeze(args);
+model.Promise = Promise;
+model.Enum    = (...args) => Object.freeze(args);
+
+model.AbortSignal     = AbortSignal;
+model.AbortController = AbortController;
+model.AbortError      = function (message) {
+    return new DOMException(message || 'This operation was aborted', 'AbortError');
+};
 
 model.Readable       = stream.Readable;
 model.ReadableStream = ReadableStream;
