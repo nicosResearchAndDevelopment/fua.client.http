@@ -12,12 +12,17 @@ class AsyncRequest extends model.Promise {
 
     static [Symbol.species] = model.Promise;
 
-    /** @type {Request | null} */ #request     = null;
-    /** @type {AbortController} */ #controller = new model.AbortController();
+    /** @type {Request | null} */ #request      = null;
+    /** @type {AbortController} */ #controller  = new model.AbortController();
+    /** @type {UndiciDispatcher} */ #dispatcher = null;
 
-    /** @param {Request} initialRequest */
-    constructor(initialRequest) {
+    /**
+     * @param {Request} initialRequest
+     * @param {UndiciDispatcher} [dispatcher]
+     */
+    constructor(initialRequest, dispatcher) {
         assert.instance(initialRequest, model.Request);
+        if (dispatcher) assert.instance(dispatcher, model.UndiciDispatcher);
         super((resolve, reject) => process.nextTick(() => {
             if (this.#controller?.signal?.aborted) {
                 this.#request = null;
@@ -30,10 +35,13 @@ class AsyncRequest extends model.Promise {
                     ]) : this.#controller.signal
                 }) : this.#request;
                 this.#request      = null;
-                model.fetch(finalRequest).then(resolve).catch(reject);
+                model.fetch(finalRequest, {
+                    dispatcher: this.#dispatcher
+                }).then(resolve).catch(reject);
             }
         }));
         this.#request = initialRequest;
+        if (dispatcher) this.#dispatcher = dispatcher;
     }
 
     /**

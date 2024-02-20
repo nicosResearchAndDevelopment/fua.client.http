@@ -54,7 +54,7 @@ describe('fua.client.http', function () {
         });
 
         local.httpServer  = http.createServer(local.expressApp);
-        local.httpsServer = https.createServer({...serverConf, rejectUnauthorized: false}, local.expressApp);
+        local.httpsServer = https.createServer(serverConf, local.expressApp);
 
         await Promise.all([
             new Promise(resolve => local.httpServer.listen(local.httpPort, resolve)),
@@ -71,18 +71,24 @@ describe('fua.client.http', function () {
 
         before('init client', async function () {
             local.httpClient  = HTTP({baseUrl: local.httpBaseUrl});
-            local.httpsClient = HTTP({
-                baseUrl: local.httpsBaseUrl,
-                connect: {...clientConf, rejectUnauthorized: false}
-            });
+            local.httpsClient = HTTP({baseUrl: local.httpsBaseUrl, connect: {rejectUnauthorized: false}});
         });
 
         test('develop', async function () {
             // console.log(await local.httpClient.get('/hello').accept('json').valid().json());
             // console.log(await local.httpClient.get('/hello').accept('text').valid().text());
 
-            console.log(await local.httpClient.get('/hello').valid().text());
-            console.log(await local.httpsClient.get('/hello').valid().text()); // FIXME make https calls with specific config work
+            console.log('http:', await local.httpClient.get('/hello').valid().text());
+            console.log('https:', await local.httpsClient.get('/hello').valid().text());
+
+            // const {fetch, Agent} = require('undici');
+            // const response       = await fetch(new URL('/hello', local.httpsBaseUrl), {
+            //     dispatcher: new Agent({
+            //         // connect: clientConf
+            //         connect: {rejectUnauthorized: false}
+            //     })
+            // });
+            // console.log('undici:', await response.text());
         });
 
         test('Dataset: /data/example.ttl', async function () {

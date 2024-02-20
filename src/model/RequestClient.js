@@ -60,15 +60,14 @@ class RequestClient {
         const request = new model.Request(target, {
             ...this.#defaultOptions,
             ...options,
-            headers:    {
+            headers: {
                 ...defaultHeaders,
                 ...this.#defaultOptions?.headers,
                 ...options?.headers
             },
-            body:       content,
-            dispatcher: this.#dispatchAgent
+            body:    content
         });
-        return new model.AsyncRequest(request);
+        return new model.AsyncRequest(request, this.#dispatchAgent);
     }
 
     get(url, headers) {
