@@ -201,7 +201,7 @@ type TLSSecureContextOptions = {
     crl?: string | Array<string> | Buffer | Array<Buffer>,
     dhparam?: string | Buffer,
     ecdhCurve?: string,
-    honorCipherOrder?: boolean
+    honorCipherOrder?: boolean,
     key: string | Array<string> | Buffer | Array<Buffer>,
     privateKeyEngine?: string,
     privateKeyIdentifier?: string,
