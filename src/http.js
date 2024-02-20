@@ -2,6 +2,11 @@ const
     model         = require('./model.js'),
     defaultClient = new model.RequestClient();
 
+/**
+ * @param {RequestOptions & RequestAgentOptions} options
+ * @returns {RequestClient}
+ * @constructor
+ */
 function HTTP(options) {
     return new model.RequestClient(options);
 }
@@ -20,6 +25,8 @@ function HTTP(options) {
 /** @typedef {'high' | 'low' | 'auto'} RequestPriority */
 /** @typedef {'audio' | 'audioworklet' | 'document' | 'embed' | 'font' | 'frame' | 'iframe' | 'image' | 'manifest' | 'object' | 'paintworklet' | 'report' | 'script' | 'sharedworker' | 'style' | 'track' | 'video' | 'worker' | 'xslt' | ''} RequestDestination */
 /** @typedef {{method?: RequestMethod, headers?: Headers | RequestHeaders, body?: RequestBody, mode?: RequestMode, credentials?: RequestCredentials, cache?: RequestCache, redirect?: RequestRedirect, referrer?: RequestReferrer, referrerPolicy?: RequestReferrerPolicy, integrity?: RequestIntegrity, keepalive?: boolean, signal?: AbortSignal, priority?: RequestPriority}} RequestOptions */
+/** @typedef {{maxRedirections?: number, connections?: number | null, bodyTimeout?: number | null, headersTimeout?: number | null, keepAliveMaxTimeout?: number | null, keepAliveTimeout?: number | null, keepAliveTimeoutThreshold?: number | null, maxHeaderSize?: number | null, maxResponseSize?: number | null, pipelining?: number | null, connect?: RequestConnectOptions, strictContentLength?: boolean, autoSelectFamily?: boolean, autoSelectFamilyAttemptTimeout?: number, allowH2?: boolean, maxConcurrentStreams?: number}} RequestAgentOptions */
+/** @typedef {{keepAlive?: boolean | null, keepAliveInitialDelay?: number | null, socketPath?: string | null, maxCachedSessions?: number | null, timeout?: number | null, servername?: string, enableTrace?: boolean, rejectUnauthorized?: boolean, minDHSize?: number, highWaterMark?: number}} RequestConnectOptions */
 
 Object.defineProperties(HTTP, {
     /** @type {function (instance: unknown): instance is RequestClient}*/
