@@ -62,6 +62,7 @@ declare class RequestClient {
     head(url, headers?): AsyncRequest
     post(url, headers?, body?): AsyncRequest
     put(url, headers?, body?): AsyncRequest
+    patch(url, headers?, body?): AsyncRequest
     delete(url, headers?, body?): AsyncRequest
     options(url, headers?, body?): AsyncRequest
 }

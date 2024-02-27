@@ -100,6 +100,14 @@ class RequestClient {
         });
     }
 
+    patch(url, headers, body) {
+        return this.fetch(url, {
+            method:  'PATCH',
+            headers: headers,
+            body:    body
+        });
+    }
+
     delete(url, headers, body) {
         return this.fetch(url, {
             method:  'DELETE',

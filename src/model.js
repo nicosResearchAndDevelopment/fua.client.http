@@ -48,7 +48,7 @@ model.Redirect       = model.Enum('follow', 'error', 'manual');
 model.ReferrerPolicy = model.Enum('no-referrer', 'no-referrer-when-downgrade', 'same-origin', 'origin', 'strict-origin', 'origin-when-cross-origin', 'strict-origin-when-cross-origin', 'unsafe-url');
 // model.Referrer = null;
 
-model.Method   = model.Enum('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE');
+model.Method   = model.Enum('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE');
 model.Priority = model.Enum('high', 'low', 'auto');
 // model.Integrity = null;
 
