@@ -2,8 +2,8 @@ const
     types      = exports,
     {Readable} = require('stream'),
     {Agent}    = require('http'),
-    is         = require('@nrd/fua.core.is'),
-    strings    = require('@nrd/fua.core.strings');
+    is         = require('@fua/core.is'),
+    strings    = require('@fua/core.strings');
 
 types.FetchOptions = {
     method:         is.validator.optional(is.validator.enum([

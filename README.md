@@ -1,11 +1,11 @@
-# @nrd/fua.client.http
+# @fua/client.http
 
 ## Client API
 
 ```ts
 import {Readable} from 'stream';
 import {Request, Response, Headers, FormData} from 'undici';
-import {TermFactory, Dataset} from '@nrd/fua.module.persistence';
+import {TermFactory, Dataset} from '@fua/module.persistence';
 
 interface ResponseMixin {
     blob(): Promise<Blob>

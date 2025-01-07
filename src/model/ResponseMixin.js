@@ -1,7 +1,7 @@
 const
     model          = require('../model.js'),
-    assert         = require('@nrd/fua.core.assert'),
-    rdf            = require('@nrd/fua.module.rdf'),
+    assert         = require('@fua/core.assert'),
+    rdf            = require('@fua/module.rdf'),
     defaultFactory = new model.TermFactory();
 
 /** @mixin ResponseMixin */

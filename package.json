@@ -1,5 +1,5 @@
 {
-  "name": "@nrd/fua.client.http",
+  "name": "@fua/client.http",
   "version": "1.0.1",
   "description": "",
   "main": "src/http.js",
@@ -7,12 +7,12 @@
     "src/*"
   ],
   "dependencies": {
-    "@nrd/fua.core.assert": "^1.0.1",
-    "@nrd/fua.core.is": "^1.0.4",
-    "@nrd/fua.core.strings": "^1.0.2",
-    "@nrd/fua.core.errors": "^1.0.1",
-    "@nrd/fua.module.persistence": "^1.0.0",
-    "@nrd/fua.module.rdf": "^1.0.1",
+    "@fua/core.assert": "^1.0.1",
+    "@fua/core.is": "^1.0.4",
+    "@fua/core.strings": "^1.0.2",
+    "@fua/core.errors": "^1.0.1",
+    "@fua/module.persistence": "^1.0.0",
+    "@fua/module.rdf": "^1.0.1",
     "undici": "^6.4.0",
     "mime": "3.x"
   },
@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "expect": "26.x",
-    "mocha": "10.x"
+    "mocha": "10.x",
+    "express": "^4.8.1"
   },
   "scripts": {
     "test": "mocha"
@@ -33,8 +34,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@git02.int.nsc.ag:10022/research/fua/client/http.git"
+    "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.client.http.git"
   },
-  "author": "spetrac@nicos-ag.com",
-  "license": "UNLICENSED"
+  "author": "Simon Petrac <pfoerdie@gmail.com>",
+  "license": "MIT"
 }

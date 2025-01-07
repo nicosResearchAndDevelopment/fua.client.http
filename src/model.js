@@ -3,9 +3,9 @@ const
     url         = require('url'),
     undici      = require('undici'),
     stream      = require('stream'),
-    errors      = require('@nrd/fua.core.errors'),
-    strings     = require('@nrd/fua.core.strings'),
-    persistence = require('@nrd/fua.module.persistence');
+    errors      = require('@fua/core.errors'),
+    strings     = require('@fua/core.strings'),
+    persistence = require('@fua/module.persistence');
 
 model.Promise = Promise;
 model.Enum    = (...args) => Object.freeze(args);

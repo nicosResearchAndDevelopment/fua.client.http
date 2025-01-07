@@ -1,5 +1,5 @@
 const
-    assert  = require('@nrd/fua.core.assert'),
+    assert  = require('@fua/core.assert'),
     express = require('express');
 
 // console.log(express);

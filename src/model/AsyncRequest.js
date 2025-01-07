@@ -1,8 +1,8 @@
 const
     util   = require('../util.js'),
     model  = require('../model.js'),
-    assert = require('@nrd/fua.core.assert'),
-    is     = require('@nrd/fua.core.is');
+    assert = require('@fua/core.assert'),
+    is     = require('@fua/core.is');
 
 /**
  * @extends {Promise<Response>}

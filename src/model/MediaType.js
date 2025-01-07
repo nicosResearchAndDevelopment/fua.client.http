@@ -1,6 +1,6 @@
 const
-    assert = require('@nrd/fua.core.assert'),
-    is     = require('@nrd/fua.core.is'),
+    assert = require('@fua/core.assert'),
+    is     = require('@fua/core.is'),
     mime   = require('mime');
 
 function MediaType(type, parameters) {

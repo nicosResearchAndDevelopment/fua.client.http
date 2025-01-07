@@ -1,7 +1,7 @@
 const
-    assert  = require('@nrd/fua.core.assert'),
-    is      = require('@nrd/fua.core.is'),
-    strings = require('@nrd/fua.core.strings'),
+    assert  = require('@fua/core.assert'),
+    is      = require('@fua/core.is'),
+    strings = require('@fua/core.strings'),
     Enum    = (...args) => Object.freeze(args);
 
 class RequestOptions {

@@ -1,5 +1,5 @@
 const
-    async       = require('@nrd/fua.core.async'),
+    async       = require('@fua/core.async'),
     express     = require('express'),
     https       = require('https'),
     undici      = require('undici'),

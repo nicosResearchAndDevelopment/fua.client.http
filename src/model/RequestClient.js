@@ -1,8 +1,8 @@
 const
     model  = require('../model.js'),
     util   = require('../util.js'),
-    assert = require('@nrd/fua.core.assert'),
-    is     = require('@nrd/fua.core.is');
+    assert = require('@fua/core.assert'),
+    is     = require('@fua/core.is');
 
 class RequestClient {
 

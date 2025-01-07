@@ -1,9 +1,9 @@
 const
     util   = exports,
     model  = require('./model.js'),
-    assert = require('@nrd/fua.core.assert'),
-    is     = require('@nrd/fua.core.is'),
-    rdf    = require('@nrd/fua.module.rdf'),
+    assert = require('@fua/core.assert'),
+    is     = require('@fua/core.is'),
+    rdf    = require('@fua/module.rdf'),
     undici = require('undici');
 
 util.getCookies    = undici.getCookies;
